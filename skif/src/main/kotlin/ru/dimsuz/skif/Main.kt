@@ -1,5 +1,9 @@
 package ru.dimsuz.skif
 
+internal fun applyRules(rules: List<Rule>): Result {
+  TODO()
+}
+
 fun main(args: Array<String>) {
   println("Hello World!")
 
