@@ -2,5 +2,6 @@ package ru.dimsuz.skif
 
 sealed interface Result {
   data class Success(val result: List<Note>) : Result
-  data class Error(val text: String, val cause: Throwable? = null) : Result
+  data class PartialSuccess(val result: List<Note>, val errors: List<Throwable>) : Result
+  data class Error(val errors: List<Throwable>) : Result
 }

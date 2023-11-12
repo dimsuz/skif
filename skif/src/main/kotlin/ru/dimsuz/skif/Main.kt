@@ -1,7 +1,28 @@
 package ru.dimsuz.skif
 
-internal fun applyRules(rules: List<Rule>): Result {
-  TODO()
+import java.lang.Exception
+import java.util.concurrent.CancellationException
+
+internal suspend fun applyRules(rules: List<Rule>): Result {
+  val gitlab = Gitlab()
+  val notes = mutableListOf<Note>()
+  val collector = NoteCollector { notes.add(it) }
+  val errors = mutableListOf<Throwable>()
+  rules.forEach { rule ->
+    try {
+      rule.apply(gitlab, collector)
+    } catch (e: Exception) {
+      if (e is CancellationException) {
+        throw e
+      }
+      errors.add(e)
+    }
+  }
+  return when {
+    errors.isEmpty() -> Result.Success(notes)
+    notes.isNotEmpty() -> Result.PartialSuccess(notes, errors)
+    else -> Result.Error(errors)
+  }
 }
 
 fun main(args: Array<String>) {

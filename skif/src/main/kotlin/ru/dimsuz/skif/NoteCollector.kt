@@ -1,5 +1,5 @@
 package ru.dimsuz.skif
 
-interface NoteCollector {
+internal fun interface NoteCollector {
   fun add(note: Note)
 }
